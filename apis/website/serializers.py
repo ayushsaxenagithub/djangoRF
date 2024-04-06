@@ -1,9 +1,20 @@
-from .models import Person
+from .models import Profile, Details
 from rest_framework import serializers
 
 
-class PersonSerializer(serializers.ModelSerializer):
+class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        meta = Person
+        model = Profile
         # exclude = ['name', 'age', ]
-        fields = "__all__"
+        #include
+        fields = '__all__'
+
+
+
+class DetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Details
+        exclude = ['dob']
+        
+
+
