@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .models import Profile
-from .serializers import ProfileSerializer
+from .models import Profile, Details
+from .serializers import ProfileSerializer, DetailsSerializer
 from rest_framework import status
 from rest_framework.views import APIView
 
@@ -65,5 +65,60 @@ def profilecrud(request,pk):
 
 
     
+class DetailsList(APIView):
+    def get(self, request):
+        detail = Details.objects.all()
+        serializer = DetailsSerializer(detail, many = True)
+        return Response(serializer.data,status = 200)
+    def post(self,request): # put pk after request
+        data = request.data
+        serializer = DetailsSerializer(data=data)
+        if(serializer.is_valid()):
+            serializer.save()
+            return Response(serializer.data,status = 200)
+        else:
+            return Response(status=500)
+        
+
+class DetailsCrud(APIView):
+    def get(self, request, pk):
+        detail = Details.objects.get(id = pk)
+        serializer = DetailsSerializer(detail)
+        return Response(serializer.data,status = 200)
+    def post(self, request, pk):
+        data = request.data
+        detail = Details.objects.get(id = pk)
+        serializer = DetailsSerializer(detail,data = data)
+        if(serializer.is_valid()):
+            serializer.save()
+            return Response(serializer.data,status = 200)
+        else:
+            return Response(serializer.data, status = 400)
+    def put(self,request, pk):
+        data = request.data
+        detail = Details.objects.get(id = pk)
+        serializer = DetailsSerializer(detail, data = data)
+        if(serializer.is_valid()):
+            serializer.save()
+        else:
+            return Response(serializer.data, status = 400)
+    def patch(self, request, pk):
+        data = request.data
+        detail = Details.objects.get(id = pk)
+        serializer = DetailsSerializer(detail, data = data, partial = True)
+        if(serializer.is_valid()):
+            serializer.save()
+            return Response(serializer.data, status = 200)
+        else:
+            return Response(serializer.data, status =400)
+    def delete(self, request, pk):
+        detail = Details.objects.get(id = pk)
+        serializer = DetailsSerializer(detail)
+        if(serializer.is_valid()):
+            serializer.delete()
+            return Response({'message':'Profile deleted successfully'})
+        else:
+            return Response({'message':'Something went wrong'})
 
 
+        

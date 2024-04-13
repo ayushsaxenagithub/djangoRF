@@ -14,7 +14,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 class DetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Details
-        exclude = ['dob']
+        exclude = ['photo']
         
 
 
