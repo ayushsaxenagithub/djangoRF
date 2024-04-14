@@ -126,13 +126,13 @@ class FullDetails(APIView):
     def get(self, request, pk):
         try:
             profile = Profile.objects.get(id=pk)
-            detail = Details.objects.get(profile=profile)
+            detail = Details.objects.filter(profile=profile)
         except Profile.DoesNotExist:
             return Response({'message': 'Profile not found'}, status=status.HTTP_404_NOT_FOUND)
         except Details.DoesNotExist:
             return Response({'message': 'Details not found'}, status=status.HTTP_404_NOT_FOUND)
         
         serializer_profile = ProfileSerializer(profile)
-        serializer_detail = DetailsSerializer(detail)
+        serializer_detail = DetailsSerializer(detail, many = True)
         full_detail = {'profile': serializer_profile.data, 'detail': serializer_detail.data}
         return Response(full_detail, status=status.HTTP_200_OK)
